@@ -1,193 +1,236 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <title>a haiku a day</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta charset="UTF-8" />
+<title>a haiku a day</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital@0;1&family=Orbitron:wght@400;600&display=swap" rel="stylesheet">
 
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital@0;1&family=Orbitron:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg1:#07040b;
+  --bg2:#12071a;
+  --ink:#f4e9ff;
+  --muted:rgba(244,233,255,.72);
+  --veil:rgba(255,255,255,.08);
+  --veil2:rgba(255,255,255,.04);
+}
+*{box-sizing:border-box}
+html,body{height:100%}
+body{
+  margin:0;
+  font-family:"Playfair Display",serif;
+  color:var(--ink);
+  background:
+    radial-gradient(900px 600px at 18% 20%, rgba(255,134,200,.12), transparent 55%),
+    radial-gradient(900px 600px at 78% 35%, rgba(187,162,255,.11), transparent 55%),
+    linear-gradient(180deg,var(--bg1),var(--bg2));
+}
+.wrap{
+  min-height:100%;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:60px 18px;
+  position:relative;
+}
+.card{
+  width:min(720px,100%);
+  padding:26px 22px 20px;
+  border-radius:18px;
+  background:linear-gradient(180deg,rgba(255,255,255,.06),rgba(255,255,255,.03));
+  border:1px solid rgba(255,255,255,.12);
+  backdrop-filter:blur(10px);
+  position:relative;
+  overflow:hidden;
+}
+h1{
+  margin:0 0 10px;
+  font-family:"Orbitron",sans-serif;
+  font-size:20px;
+  letter-spacing:.06em;
+  text-transform:lowercase;
+}
+.sub{margin:0 0 18px;color:var(--muted);font-style:italic}
+.haiku{
+  white-space:pre-line;
+  font-size:22px;
+  line-height:1.55;
+  padding:14px;
+  border-radius:14px;
+  background:linear-gradient(180deg,var(--veil),var(--veil2));
+  border:1px solid rgba(255,255,255,.1);
+  min-height:120px;
+}
+.metaRow{
+  display:flex;
+  justify-content:space-between;
+  margin-top:12px;
+  font-family:"Orbitron",sans-serif;
+  font-size:12px;
+  color:var(--muted);
+}
+.sign{
+  margin-top:18px;
+  padding-top:14px;
+  border-top:1px dashed rgba(255,255,255,.2);
+  text-align:right;
+  font-family:"Orbitron",sans-serif;
+  letter-spacing:.18em;
+  display:none;
+}
 
-  <style>
-    :root{
-      --bg1:#07040b;
-      --bg2:#12071a;
-      --ink:#f4e9ff;
-      --muted: rgba(244,233,255,.72);
-      --veil: rgba(255,255,255,.08);
-      --veil2: rgba(255,255,255,.04);
-      --glow: rgba(255,170,230,.18);
-      --accent: #ff86c8;
-      --accent2:#bba2ff;
-    }
+/* ghosts */
+.ghost{
+  position:absolute;
+  width:140px;
+  height:190px;
+  opacity:.9;
+  animation:float 6s ease-in-out infinite;
+}
+.ghost .sheet{
+  position:absolute;
+  inset:0;
+  background:linear-gradient(180deg,#fff,#ddd);
+  border-radius:70px 70px 50px 50px;
+}
+.g1{left:3%;top:8%}
+.g2{right:4%;bottom:8%;animation-duration:7s}
 
-    *{ box-sizing:border-box; }
-    html,body{ height:100%; }
-    body{
-      margin:0;
-      color:var(--ink);
-      background:
-        radial-gradient(900px 600px at 18% 20%, rgba(255,134,200,.12), transparent 55%),
-        radial-gradient(900px 600px at 78% 35%, rgba(187,162,255,.11), transparent 55%),
-        radial-gradient(1200px 900px at 50% 120%, rgba(255,255,255,.04), transparent 60%),
-        linear-gradient(180deg, var(--bg1), var(--bg2));
-      overflow-x:hidden;
-      font-family: "Playfair Display", serif;
-    }
+@keyframes float{
+  0%{transform:translateY(0)}
+  50%{transform:translateY(-18px)}
+  100%{transform:translateY(0)}
+}
 
-    /* subtle film grain */
-    body:before{
-      content:"";
-      position:fixed; inset:0;
-      background-image:
-        radial-gradient(circle at 20% 10%, rgba(255,255,255,.05) 0 1px, transparent 1px),
-        radial-gradient(circle at 80% 30%, rgba(255,255,255,.04) 0 1px, transparent 1px),
-        radial-gradient(circle at 40% 70%, rgba(255,255,255,.03) 0 1px, transparent 1px);
-      background-size: 180px 180px, 210px 210px, 240px 240px;
-      opacity:.35;
-      pointer-events:none;
-      mix-blend-mode: screen;
-    }
+/* veil */
+.veilLock{
+  position:absolute;
+  inset:0;
+  display:none;
+  align-items:center;
+  justify-content:center;
+  background:rgba(0,0,0,.45);
+  backdrop-filter:blur(6px);
+}
+.veilPanel{
+  background:rgba(0,0,0,.35);
+  border:1px solid rgba(255,255,255,.2);
+  border-radius:16px;
+  padding:18px;
+}
+.countdown{
+  display:flex;
+  gap:8px;
+  font-family:"Orbitron",sans-serif;
+  font-size:12px;
+}
+.unit{
+  padding:6px 10px;
+  border:1px solid rgba(255,255,255,.2);
+  border-radius:999px;
+}
+</style>
+</head>
 
-    .wrap{
-      min-height:100%;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      padding: 60px 18px 80px;
-      position:relative;
-      isolation:isolate;
-    }
+<body>
+<div class="wrap">
 
-    .card{
-      width:min(720px, 100%);
-      padding: 26px 22px 20px;
-      border:1px solid rgba(255,255,255,.12);
-      background: linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.03));
-      box-shadow: 0 20px 90px rgba(0,0,0,.55);
-      border-radius: 18px;
-      backdrop-filter: blur(10px);
-      position:relative;
-      z-index:2;
-    }
+  <div class="ghost g1"><div class="sheet"></div></div>
+  <div class="ghost g2"><div class="sheet"></div></div>
 
-    h1{
-      margin: 0 0 12px;
-      font-family: "Orbitron", system-ui, sans-serif;
-      font-weight:600;
-      letter-spacing:.06em;
-      text-transform: lowercase;
-      font-size: 20px;
-      opacity:.95;
-    }
+  <div class="card" id="card">
 
-    .sub{
-      margin:0 0 18px;
-      color:var(--muted);
-      font-style: italic;
-      line-height:1.35;
-    }
+    <div class="veilLock" id="veilLock">
+      <div class="veilPanel">
+        <p><em>not yet.</em></p>
+        <div class="countdown" id="countdown"></div>
+        <p style="font-size:11px;margin-top:10px">opens feb 9 (nyc)</p>
+      </div>
+    </div>
 
-    .haiku{
-      white-space:pre-line;
-      font-size: 22px;
-      line-height: 1.55;
-      padding: 14px 14px;
-      border-radius: 14px;
-      background: linear-gradient(180deg, var(--veil), var(--veil2));
-      border: 1px solid rgba(255,255,255,.10);
-      box-shadow: inset 0 0 0 1px rgba(0,0,0,.15);
-      margin: 14px 0 14px;
-    }
+    <h1>a haiku a day</h1>
+    <p class="sub">feb 9–feb 14 • nyc time</p>
 
-    .metaRow{
-      display:flex;
-      flex-wrap:wrap;
-      gap:10px;
-      align-items:center;
-      justify-content:space-between;
-      margin-top: 10px;
-      color:var(--muted);
-      font-family: "Orbitron", system-ui, sans-serif;
-      font-size: 12px;
-      letter-spacing:.05em;
-    }
+    <div class="haiku" id="haiku"></div>
 
-    .pill{
-      padding: 8px 10px;
-      border: 1px solid rgba(255,255,255,.12);
-      border-radius: 999px;
-      background: rgba(0,0,0,.20);
-    }
+    <div class="metaRow">
+      <div id="dayPill"></div>
+      <div id="datePill"></div>
+    </div>
 
-    .sign{
-      margin-top: 18px;
-      border-top: 1px dashed rgba(255,255,255,.18);
-      padding-top: 14px;
-      display:flex;
-      justify-content:flex-end;
-      font-family: "Orbitron", system-ui, sans-serif;
-      letter-spacing:.18em;
-      color: rgba(255,255,255,.86);
-      text-transform: lowercase;
-    }
+    <div class="sign" id="sign">xxFFK</div>
+  </div>
+</div>
 
-    /* ---------- GHOSTS ---------- */
-    .ghost{
-      position:absolute;
-      width: 150px;
-      height: 200px;
-      z-index:1;
-      filter: drop-shadow(0 22px 30px rgba(0,0,0,.55));
-      opacity:.9;
-      pointer-events:none;
-    }
+<script>
+const HAIKUS = [
+`The day breaks when you
+Wake up from dream and stasis
+You are the sunlight`,
 
-    /* main body */
-    .ghost .sheet{
-      position:absolute;
-      inset:0;
-      background:
-        radial-gradient(40px 40px at 45% 30%, rgba(0,0,0,.22) 0 2px, transparent 3px),
-        radial-gradient(40px 40px at 62% 30%, rgba(0,0,0,.22) 0 2px, transparent 3px),
-        radial-gradient(80px 50px at 52% 25%, rgba(0,0,0,.10), transparent 60%),
-        linear-gradient(180deg, rgba(255,255,255,.92), rgba(255,255,255,.65));
-      border-radius: 70px 70px 52px 52px;
-      transform-origin: 50% 10%;
-      overflow:hidden;
-      border: 1px solid rgba(255,255,255,.28);
-    }
+`I crave your smell and
+Taste lingers after you go
+Rinse repeat rinse re–`,
 
-    /* drape folds */
-    .ghost .sheet:before{
-      content:"";
-      position:absolute;
-      inset:-10px -10px 0 -10px;
-      background:
-        radial-gradient(120px 180px at 35% 55%, rgba(0,0,0,.10), transparent 60%),
-        radial-gradient(120px 180px at 70% 52%, rgba(0,0,0,.10), transparent 62%),
-        repeating-linear-gradient(90deg,
-          rgba(0,0,0,.05) 0 6px,
-          transparent 6px 18px);
-      opacity:.35;
-      mix-blend-mode:multiply;
-      transform: skewX(-2deg);
-    }
+`Where are my headphones
+In my bag, In my coat, Fuck!
+Here in my hand. Fuck!`,
 
-    /* bottom scallops */
-    .ghost .sheet:after{
-      content:"";
-      position:absolute;
-      left:-6px; right:-6px; bottom:-18px;
-      height: 50px;
-      background:
-        radial-gradient(circle at 10% 0%, rgba(255,255,255,.70) 0 26px, transparent 27px),
-        radial-gradient(circle at 30% 0%, rgba(255,255,255,.70) 0 26px, transparent 27px),
-        radial-gradient(circle at 50% 0%, rgba(255,255,255,.70) 0 26px, transparent 27px),
-        radial-gradient(circle at 70% 0%, rgba(255,255,255,.70) 0 26px, transparent 27px),
-        radial-gradient(circle at 90% 0%, rgba(255,255,255,.70) 0 26px, transparent 27px);
-      filter: blur(.2px);
-      opacity:.9;
-    }
+`I sweat with you most
+Can you let me drown in it
+No air just sweet trust`,
 
-    /* blush aura */
-   
+`Princess thickiana,
+Particular, rare, rare, breed
+Best served warm over face`,
+
+`I’d say I don’t think
+About you while I daydream
+It would be a lie`
+];
+
+function nycNow(){
+  return new Date(new Date().toLocaleString("en-US",{timeZone:"America/New_York"}));
+}
+
+const start = new Date("2026-02-09T00:00:00-05:00");
+const end   = new Date("2026-02-14T23:59:59-05:00");
+const now = nycNow();
+
+const haikuEl = document.getElementById("haiku");
+const veil = document.getElementById("veilLock");
+const dayPill = document.getElementById("dayPill");
+const datePill = document.getElementById("datePill");
+const sign = document.getElementById("sign");
+
+if(now < start){
+  veil.style.display="flex";
+  updateCountdown();
+  setInterval(updateCountdown,1000);
+}else{
+  const dayIndex = Math.min(
+    Math.floor((now - start)/(1000*60*60*24)),
+    HAIKUS.length-1
+  );
+  haikuEl.textContent = HAIKUS[dayIndex];
+  dayPill.textContent = `day ${dayIndex+1}`;
+  datePill.textContent = now.toDateString();
+  if(dayIndex === HAIKUS.length-1) sign.style.display="block";
+}
+
+function updateCountdown(){
+  const diff = start - nycNow();
+  const d = Math.floor(diff/86400000);
+  const h = Math.floor(diff/3600000)%24;
+  const m = Math.floor(diff/60000)%60;
+  const s = Math.floor(diff/1000)%60;
+  document.getElementById("countdown").innerHTML =
+    `<div class="unit">${d}d</div>
+     <div class="unit">${h}h</div>
+     <div class="unit">${m}m</div>
+     <div class="unit">${s}s</div>`;
+}
+</script>
+</body>
+</html>
